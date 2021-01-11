@@ -3,7 +3,6 @@ package multilevel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -11,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -54,7 +52,7 @@ public class GeneratorPane extends BorderPane {
             try {
                 onClick();
             }catch (NullPointerException ex){
-                ErrorPane.setErrorScene(stage, "File not chosen!");
+                System.out.println("File not chosen");
             }
         });
         genButton.setPrefWidth(100.0);
@@ -73,7 +71,7 @@ public class GeneratorPane extends BorderPane {
             p = Integer.parseInt(pField.getText());
             n = Integer.parseInt(nField.getText());
         }catch (NumberFormatException nfe){
-            ErrorPane.setErrorScene(stage, "Illegal number format!");
+            System.out.println("Something went wrong");
             return;
         }
         String phase = "";
