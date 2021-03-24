@@ -15,7 +15,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -92,10 +91,10 @@ public class GeneratorPane extends BorderPane {
     private void keyWriter(String selectedDirPath, int p, int n, String phase) {
         File outputFile = new File(selectedDirPath);
         try (PrintWriter writer = new PrintWriter(outputFile)) {
-            writer.write("L = " + (int)(Math.pow(p,n) - 1) + "\t" + "Keys quantity = " + Generator.getKeysMap(p, n, phase).keySet().size());
+            writer.write("L = " + (int)(Math.pow(p,n) - 1) + "\t" + "Keys quantity = " + Generator.getKeys(p, n, phase).size());
             writer.println();
             String keys ="";
-            Iterator iter = Generator.getKeysMap(p, n, phase).keySet().iterator();
+            Iterator iter = Generator.getKeys(p, n, phase).iterator();
             while (iter.hasNext()) {
                 keys = (String) iter.next();
                 writer.write(keys);

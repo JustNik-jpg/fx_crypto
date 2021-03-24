@@ -1,72 +1,95 @@
 package multilevel;
 
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class Generator {
 
-    public static Map<String, Integer> getKeysMap(int p, int n, String phase) {
-        Map<String, Integer> periods = new HashMap<String, Integer>();
+    public static ArrayList<String> getKeys(int p, int n, String phase) {
+        ArrayList<String> periods = new ArrayList<>();
+        Map<String, String> pairs = new HashMap<>();
+
         int[] intArr = new int[n];
         intArr[0] = 0;
+        String period = "";
 
-
-
-
-        System.out.println(Arrays.toString(intArr));
-        for (int i = 0; i < Math.pow(p, n); i++) {
+        while (true) {
             String s = "";
-            for (int j = 0; j < intArr.length; j++) {
-                s += getHexString(intArr[j]);
+
+            // Generating key from array
+            for (int i : intArr) {
+                s += getHexString(i);
+            }
+            //--------------------------
+
+
+            System.out.println(s);
+
+            // If key generates period of appropriate length and passes evaluation it's added in map
+            period = generatePeriod(p, n, s, phase);
+
+            if ((period.length() == ((Math.pow(p, n)) - 1)) && (Evaluator.isPseudoRandom(period, p, n))) {
+                periods.add(s);
+
+                int pair = Evaluator.startingPair(intArr[0], p);
+                if (pair != -1) {
+                    pairs.putIfAbsent(intArr[0] + "", pair + "");
+
+                    String key2 = generatePairKey(s, pair, p);
+
+                    periods.add(key2);
+
+                }
 
             }
-            System.out.println(s+" "+i);
-            periods.put(s, generatePeriod(p, n, s, phase).length());
 
+
+            //--------------------------------------------------------------------------------------
+            // Key increment
             if (intArr[n - 1] == p - 1) {
 
                 intArr[n - 1] = 0;
                 int j = 1;
-                for (; j < n-1; j++) {
+                for (; j < n - 1; j++) { // Checks every next value for reaching it's ceiling
+                    // If value reached it's max value - reset it and check next value in next iteration
                     if (intArr[n - 1 - j] == p - 1) {
-
                         intArr[n - 1 - j] = 0;
                     } else {
+                        // If value isn't at it's max value - no update needed - break
                         break;
                     }
                 }
-                intArr[n - 1 - j]++;
+
+                int nextValueIndex = n - 1 - j;
+
+                // After resetting max values increment next
+                intArr[nextValueIndex]++;
+
+                //Checking if first index was incremented
+                if (nextValueIndex == 0) {
+                    // Checking if max value of possible keys reached
+                    if (intArr[0] == p) {
+                        break;
+                    }
+                    // Checking if starting value keys was already found
+                    for (Map.Entry pair : pairs.entrySet()) {
+                        if (intArr[0] == Integer.parseInt((String) pair.getValue())) {
+                            intArr[0]++;
+                            break;
+                        }
+                    }
+                }
+
                 continue;
 
             }
 
             intArr[n - 1]++;
 
-
         }
-
-        System.out.println(periods);
-
-        System.out.println("--------------------------------------");
-
-        Iterator it = periods.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            if (((int) (entry.getValue())) == ((Math.pow(p, n)) - 1)) {
-                boolean b = Evaluator.isPseudoRandom(generatePeriod(p, n, (String) entry.getKey(), phase), p, n);
-                System.out.println(entry.getKey() + " " + b);
-                if (!b) {
-                    it.remove();
-                }
-
-            } else {
-                it.remove();
-            }
-        }
-
-        System.out.println(periods + " " + periods.size());
 
         return periods;
     }
@@ -89,7 +112,7 @@ public class Generator {
                 temp += Generator.parseHex(s1) * Generator.parseHex(s2);
 
             }
-            int iii = temp % p;
+
             period += Generator.getHexString(temp % p);
             if (period.endsWith(phase) && (period.length() > phase.length() * 2)) {
                 period = period.substring(0, period.length() - phase.length());
@@ -100,6 +123,19 @@ public class Generator {
 
         return period;
 
+    }
+
+    public static String generatePairKey(String key, int pairStart, int p) {
+        String result = getHexString(pairStart);
+        int k = p - pairStart;
+
+        for (int i = 1; i < key.length(); i++) {
+            int a0 = parseHex(String.valueOf(key.charAt(key.length() - i)));
+            result += getHexString((k * a0) % p);
+
+        }
+
+        return result;
     }
 
     public static String getHexString(int i) {
@@ -115,80 +151,44 @@ public class Generator {
 
     public static int parseHex(String s) {
 
-        switch (s) {
-            case "1":
-                return 1;
-            case "2":
-                return 2;
-            case "3":
-                return 3;
-            case "4":
-                return 4;
-            case "5":
-                return 5;
-            case "6":
-                return 6;
-            case "7":
-                return 7;
-            case "8":
-                return 8;
-            case "9":
-                return 9;
-            case "0":
-                return 0;
-            case "A":
-                return 10;
-            case "B":
-                return 11;
-            case "C":
-                return 12;
-            case "D":
-                return 13;
-            case "E":
-                return 14;
-            case "F":
-                return 15;
-            case "G":
-                return 16;
-            case "H":
-                return 17;
-            case "I":
-                return 18;
-            case "J":
-                return 19;
-            case "K":
-                return 20;
-            case "L":
-                return 21;
-            case "M":
-                return 22;
-            case "N":
-                return 23;
-            case "O":
-                return 24;
-            case "P":
-                return 25;
-            case "Q":
-                return 26;
-            case "R":
-                return 27;
-            case "S":
-                return 28;
-            case "T":
-                return 29;
-            case "U":
-                return 30;
-            case "V":
-                return 31;
-            case "W":
-                return 32;
-            case "X":
-                return 33;
-            case "Y":
-                return 34;
-            case "Z":
-                return 35;
-        }
-        return -1;
+        return switch (s) {
+            case "1" -> 1;
+            case "2" -> 2;
+            case "3" -> 3;
+            case "4" -> 4;
+            case "5" -> 5;
+            case "6" -> 6;
+            case "7" -> 7;
+            case "8" -> 8;
+            case "9" -> 9;
+            case "0" -> 0;
+            case "A" -> 10;
+            case "B" -> 11;
+            case "C" -> 12;
+            case "D" -> 13;
+            case "E" -> 14;
+            case "F" -> 15;
+            case "G" -> 16;
+            case "H" -> 17;
+            case "I" -> 18;
+            case "J" -> 19;
+            case "K" -> 20;
+            case "L" -> 21;
+            case "M" -> 22;
+            case "N" -> 23;
+            case "O" -> 24;
+            case "P" -> 25;
+            case "Q" -> 26;
+            case "R" -> 27;
+            case "S" -> 28;
+            case "T" -> 29;
+            case "U" -> 30;
+            case "V" -> 31;
+            case "W" -> 32;
+            case "X" -> 33;
+            case "Y" -> 34;
+            case "Z" -> 35;
+            default -> -1;
+        };
     }
 }

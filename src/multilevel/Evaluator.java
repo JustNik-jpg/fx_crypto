@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 
 public class Evaluator {
 
+    /*
+    This is period evaluation method that uses support methods for evaluation
+     */
     public static boolean isPseudoRandom(String s, int p, int n) {
-
-        boolean repetitions = true;
-
 
         boolean equalNumOfReps = true;
         for (int i = 1; i <= n; i++) {
@@ -21,8 +21,9 @@ public class Evaluator {
         return isUnique(s, n) && isEqualNumberOfChars(s, p, n) && equalNumOfReps;
     }
 
+    //This method check uniqueness of every possible 3 character group
     public static boolean isUnique(String s, int n) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Integer> map = new HashMap<>();
         Matcher matcher = Pattern.compile("(.){" + n + "}").matcher(s);
         String group = "";
         while (matcher.find()) {
@@ -46,8 +47,9 @@ public class Evaluator {
 
     }
 
+    //This method check uniqueness of repetitions of given length
     public static boolean isEqualNumOfRepetitions(String s, int repLength, int p, int n) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Integer> map = new HashMap<>();
         Pattern pattern;
         Matcher matcher;
 
@@ -72,7 +74,6 @@ public class Evaluator {
                 }
 
             }
-            String key = ss;
 
         }
 
@@ -87,8 +88,9 @@ public class Evaluator {
         return evaluateMap(map, numOfReps);
     }
 
+    //This method check equality of every char in period
     public static boolean isEqualNumberOfChars(String s, int p, int n) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Integer> map = new HashMap<>();
 
         for (int i = 0; i < s.length(); i++) {
             String c = String.valueOf(s.charAt(i));
@@ -109,6 +111,7 @@ public class Evaluator {
 
     }
 
+    //Support method used for evaluating maps for equality of entries to a given number
     private static boolean evaluateMap(Map<String, Integer> map, int numOfReps) {
         Iterator it = map.entrySet().iterator();
         Matcher m;
@@ -129,5 +132,27 @@ public class Evaluator {
         }
         return true;
     }
+
+    /*
+    In this section we have support key evaluation methods
+     */
+
+    //This method defines if a starting key number has a pair
+    //If so it returns starting pair
+    //If has no pair - return -1
+    public static int startingPair(int startingNumber,int p){
+        int result;
+
+        for (int i = startingNumber; i < p; i++) {
+            result = (startingNumber * i)%p;
+            if (result==1){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+
 
 }
