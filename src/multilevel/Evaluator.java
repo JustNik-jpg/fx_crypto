@@ -163,8 +163,8 @@ public class Evaluator {
                 result -= result / j;
             }
         }
-        if (n > 1) result -= result / i;
-        return result/n;
+        if (i > 1) result -= result / i;
+        return result / n;
     }
 
 
