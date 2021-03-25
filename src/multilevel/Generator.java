@@ -1,6 +1,7 @@
 package multilevel;
 
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,25 +26,31 @@ public class Generator {
             }
             //--------------------------
 
-
             System.out.println(s);
 
-            // If key generates period of appropriate length and passes evaluation it's added in map
-            period = generatePeriod(p, n, s, phase);
+            if (periods.contains(s)) {
 
-            if ((period.length() == ((Math.pow(p, n)) - 1)) && (Evaluator.isPseudoRandom(period, p, n))) {
-                periods.add(s);
+            } else {
 
-                int pair = Evaluator.startingPair(intArr[0], p);
-                if (pair != -1) {
-                    pairs.putIfAbsent(intArr[0] + "", pair + "");
+                // If key generates period of appropriate length and passes evaluation it's added in map
+                period = generatePeriod(p, n, s, phase);
 
-                    String key2 = generatePairKey(s, pair, p);
+                if ((period.length() == ((Math.pow(p, n)) - 1)) && (Evaluator.isPseudoRandom(period, p, n))) {
+                    System.out.println("Adding original " + s);
+                    periods.add(s);
 
-                    periods.add(key2);
+                    int pair = Evaluator.startingPair(intArr[0], p);
+                    if (pair != -1) {
+                        pairs.putIfAbsent(intArr[0] + "", pair + "");
+
+                        String key2 = generatePairKey(s, pair, p);
+
+                        System.out.println("Adding pair " + key2);
+                        periods.add(key2);
+
+                    }
 
                 }
-
             }
 
 

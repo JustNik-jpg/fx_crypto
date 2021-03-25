@@ -19,6 +19,7 @@ public class Evaluator {
         }
 
         return isUnique(s, n) && isEqualNumberOfChars(s, p, n) && equalNumOfReps;
+
     }
 
     //This method check uniqueness of every possible 3 character group
