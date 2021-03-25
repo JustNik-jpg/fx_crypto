@@ -153,7 +153,19 @@ public class Evaluator {
 
         return -1;
     }
-
+    //Formula that checks if the number of keys is right
+    public int eulersFormula(int p, int n) {
+        int i = (int)Math.pow(p,n) - 1;
+        int result = i;
+        for (int j = 2; j * j <= i; ++j) {
+            if (i % j == 0) {
+                while (i % j == 0) i /= j;
+                result -= result / j;
+            }
+        }
+        if (n > 1) result -= result / i;
+        return result/n;
+    }
 
 
 }
