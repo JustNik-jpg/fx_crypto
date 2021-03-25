@@ -24,11 +24,17 @@ public class Dispatcher {
         int nCeiling = 9;
 
         for (int p : pArray) {
+            if ((p == 5) || (p == 7) || (p == 17) || (p == 19) || (p == 23)) {
+                nCeiling--;
+            }
+            int finalCeiling = nCeiling;
             Thread t = new Thread(() -> {
-                File file = new File("keys"+p+".txt");
+
+                File file = new File("keys" + p + ".txt");
                 try (PrintWriter writer = new PrintWriter(file)) {
 
-                    for (int n = 3; n < nCeiling; n++) {
+                    writer.write("Starting " + p + "...\n");
+                    for (int n = 3; n < finalCeiling; n++) {
                         String head = "p=" + p + " n=" + n;
                         ArrayList<String> keys = Generator.getKeys(p, n, phase.substring(0, n));
 
@@ -38,10 +44,13 @@ public class Dispatcher {
                         }
 
                     }
+                    writer.flush();
+
                 } catch (FileNotFoundException fileNotFoundException) {
                     fileNotFoundException.printStackTrace();
                     return;
                 }
+
 
             });
             t.start();
