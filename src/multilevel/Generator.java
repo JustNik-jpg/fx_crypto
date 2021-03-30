@@ -1,13 +1,12 @@
 package multilevel;
 
 
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import javafx.beans.InvalidationListener;
+
+import java.util.*;
 
 public class Generator {
+
 
     public static ArrayList<String> getKeys(int p, int n, String phase) {
         ArrayList<String> periods = new ArrayList<>();
@@ -27,6 +26,7 @@ public class Generator {
             //--------------------------
 
             System.out.println(s);
+            Main.gp.setStatus(s);
 
             if (periods.contains(s)) {
 
@@ -37,6 +37,7 @@ public class Generator {
 
                 if ((period.length() == ((Math.pow(p, n)) - 1)) && (Evaluator.isPseudoRandom(period, p, n))) {
                     System.out.println("Adding original " + s);
+                    Main.gp.setStatus("Adding original " + s);
                     periods.add(s);
 
                     int pair = Evaluator.startingPair(intArr[0], p);
@@ -46,6 +47,7 @@ public class Generator {
                         String key2 = generatePairKey(s, pair, p);
 
                         System.out.println("Adding pair " + key2);
+                        Main.gp.setStatus("Adding pair " + key2);
                         periods.add(key2);
 
                     }
@@ -98,6 +100,8 @@ public class Generator {
 
         }
 
+        Collections.sort(periods);
+
         return periods;
     }
 
@@ -127,7 +131,6 @@ public class Generator {
             }
 
         }
-
         return period;
 
     }
@@ -198,4 +201,5 @@ public class Generator {
             default -> -1;
         };
     }
+
 }
